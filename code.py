@@ -6,4 +6,4 @@ theta = pi
 d_theta = pi/100
 while (theta <= 2*pi):
     theta += d_theta
-    coaster.append (3)
+    coaster.append (3*vector (cos(theta),sin(theta),0))
