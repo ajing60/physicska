@@ -1,3 +1,4 @@
+Web VPython 3.2
 #define size of viewing box
 x_min = 0
 x_max = 100
@@ -31,9 +32,9 @@ def path (x):
                 if (4 <= x <= 6): 
                     return -1 * ((1 - (x-5)**2)**0.5)+1.7
             elif 0 <= x <= 5: 
-                return 0.5 * math.e**(x+5)
+                return 0.5 * exp(x+5)
             elif 5 <= x <= 10: 
-                return 0.5 * math.e ** (-x + 5)
+                return 0.5 * exp(-x + 5)
             else:
                 return -5
 
@@ -63,7 +64,7 @@ while True:
         normal = vector (-n_slope/n_mag, 1/n_mag, 0)
 
     t += dt
-    omega = v.x / radius
+    omega = v_i.x / radius
     marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
     #in this case angle = radians turned per 1/100 second
     #with angular vel = 0.05 * 100 = 5 rad/s
