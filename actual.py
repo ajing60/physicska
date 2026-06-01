@@ -10,6 +10,14 @@ t = 0
 dt = 1/fps
 g = 9.81
 Fg = vector (0, -g, 0)
+
+#making buttons for path type
+def set_path (path_type_value, text_value):
+    
+button(bind=lambda: globals().update(path_type="curves", text="Curves"))
+button(bind=lambda: globals().update(path_type="loop", text="Loop"))
+button(bind=lambda: globals().update(path_type="ramp", text="Ramp"))
+
 path_type = "curves" #"loop""ramp"
 mass= 10
 path_curve = None
