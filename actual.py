@@ -10,10 +10,11 @@ t = 0
 dt = 1/fps
 g = 9.81
 Fg = vector (0, -g, 0)
-path_type = "ramp" "curves" "loop"
+path_type = "curves" #"loop""ramp"
+mass= 10
+path_curve = None
 
-sphere_location = vector (0, 0, 0)
-v_i = 0
+sphere_location = vector (0, 20, 0)
 
 def path (x):
     if path_type == "ramp": 
@@ -45,10 +46,17 @@ def setup ():
     if path_curve: path_curve.visible = False
     pts = []
     for x_val in arange (0, 101, 0.5): 
-        pts.append (vector (x_val, get_floor (x_val), 0))
+        pts.append (vector (x_val, path(x_val), 0))
     path_curve = curve (pos = pts, color = color.white, radius = 0.2)
 
 marble = sphere (pos = sphere_location, radius = 1, texture = textures.wood)
+marble.v = vector (20,0,0)
+
+path_pts = []
+for xv in arange(0, 101, 0.5):
+    path_pts.append(vector(xv, path(xv), 0))
+path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
+
 
 def slope (x): 
     dx = 0.01
@@ -56,19 +64,35 @@ def slope (x):
 
 while True: 
     rate (fps) # run 100 frames per sec
-    marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
+    F_net = vector(0,-g*mass,0)
+    #marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
 
-    if marble.pos.y <= path (marble.pos.x): 
-        n_slope = slope (marble.pos.x)
-        n_mag = sqrt (1 + slope ** 2)
-        normal = vector (-n_slope/n_mag, 1/n_mag, 0)
+    if marble.pos.y <= (path (marble.pos.x)+0.5): 
+
+        #path normal vector
+        m= slope(marble.pos.x)
+        n_mag= sqrt(1+m**2)
+        normal= vector(-m/ n_mag, 1/ n_mag, 0)
+        v_n = dot(marble.v, normal)
+        if v_n < 0:
+            marble.pos.y = path(marble.pos.x)+0.5
+            
+            marble.v -= normal*v_n
+        
+        F_n = normal * (-dot(F_net, normal))
+        F_net += F_n
+        
+        
+    a = F_net/mass
+    marble.v += a*dt
+    marble.pos += marble.v *dt
+        
+        
 
     t += dt
-    omega = v_i.x / radius
-    marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
+    #omega = v_i.x / radius
+    #marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
     #in this case angle = radians turned per 1/100 second
+    
     #with angular vel = 0.05 * 100 = 5 rad/s
 
-path = curve (pos = [vector (0, 0, 0)])
-for i in range (0, 50): 
-    path.append()
