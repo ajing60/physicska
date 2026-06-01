@@ -20,10 +20,12 @@ def path (x):
     if path_type == "ramp": 
         if x < 0: return 10
         if 0 <= x <= 30: return 10 - (0.5 * x)
-        return -5
+        return -50
 
     elif path_type == "curves":
-        return 4 * sin (x/10)
+        if 0 <= x <= 90: 
+            return 4 * sin (x/10)
+        else: return -50
     
     elif path_type == "loop":
         if (0.9 <= marble.pos.y <= 1.7): 
@@ -37,15 +39,14 @@ def path (x):
             elif 5 <= x <= 10: 
                 return 0.5 * exp(-x + 5)
             else:
-                return -5
+                return -50
 
     return -5
 
 def setup ():
-    global path_curve
     if path_curve: path_curve.visible = False
     pts = []
-    for x_val in arange (0, 101, 0.5): 
+    for x_val in arange (0, 100, 0.5): 
         pts.append (vector (x_val, path(x_val), 0))
     path_curve = curve (pos = pts, color = color.white, radius = 0.2)
 
@@ -53,8 +54,8 @@ marble = sphere (pos = sphere_location, radius = 1, texture = textures.wood)
 marble.v = vector (20,0,0)
 
 path_pts = []
-for xv in arange(0, 101, 0.5):
-    path_pts.append(vector(xv, path(xv), 0))
+for xcoord in arange(0, 100.5, 0.5):
+    path_pts.append(vector(xcoord, path(xcoord), 0))
 path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
 
 
@@ -95,4 +96,5 @@ while True:
     #in this case angle = radians turned per 1/100 second
     
     #with angular vel = 0.05 * 100 = 5 rad/s
+
 
