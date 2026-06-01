@@ -10,12 +10,9 @@ t = 0
 dt = 1/fps
 g = 9.81
 Fg = vector (0, -g, 0)
-path_type = "curves" #"loop""ramp"
+path_type = "curves"#"ramp" "loop"
 mass= 10
 path_curve = None
-
-sphere_location = vector (0, 20, 0)
-
 def path (x):
     if path_type == "ramp": 
         if x < 0: return 10
@@ -43,15 +40,10 @@ def path (x):
 
     return -5
 
-def setup ():
-    if path_curve: path_curve.visible = False
-    pts = []
-    for x_val in arange (0, 100, 0.5): 
-        pts.append (vector (x_val, path(x_val), 0))
-    path_curve = curve (pos = pts, color = color.white, radius = 0.2)
-
+#def setup ():
+sphere_location = vector (0.5, path(0.5), 0)
 marble = sphere (pos = sphere_location, radius = 1, texture = textures.wood)
-marble.v = vector (20,0,0)
+marble.v = vector (10,0,0)
 
 path_pts = []
 for xcoord in arange(0, 100.5, 0.5):
