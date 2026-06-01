@@ -21,9 +21,9 @@ def set_loop():
 def set_ramp():
     globals().update(path_type="ramp")
 
-button(bind=set_curves)
-button(bind=set_loop)
-button(bind=set_ramp)
+button(bind=set_curves, text = "make path curve")
+button(bind=set_loop, text = "make path loop")
+button(bind=set_ramp, text = "make path ramp")
 
 
 path_type = "curves" #"loop""ramp"
