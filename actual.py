@@ -11,6 +11,8 @@ dt = 1/fps
 g = 9.81
 Fg = vector (0, -g, 0)
 
+path_type = ""
+
 #making buttons for path type
 def set_curves():
     globals().update(path_type="curves")
@@ -26,7 +28,7 @@ button(bind=set_loop, text = "make path loop")
 button(bind=set_ramp, text = "make path ramp")
 
 
-path_type = "curves" #"loop""ramp"
+
 mass= 10
 path_curve = None
 def path (x):
