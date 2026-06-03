@@ -15,6 +15,7 @@ Fg = vector (0, -g, 0)
 
 path_type = "ramp"#"ramp""curves" #
 mass= 10
+radi = pow (mass, 1/3)
 path_curve = None
 def path (x):
     if path_type == "ramp": 
@@ -23,7 +24,7 @@ def path (x):
         return -50
 
     elif path_type == "curves":
-        if 0 <= x <= 90: 
+        if -80<= x <= 90: 
             return 4 * sin (x/10)
         else: return -50
     
@@ -48,8 +49,18 @@ def path (x):
 #def setup ():
     
 marble_location = vector (-79.5, path(-79.5), 0)
-marble = sphere (pos = marble_location, radius = 1, texture = textures.wood)
+marble = sphere (pos = marble_location, radius = radi, texture = textures.wood)
+
+running = False
 marble.v = vector (15,0,0)
+v_arrow = arrow (pos = marble.pos, axis = marble.v, color = color.yellow, shaftwidth = 0.3)
+
+def launch(): 
+    global running
+    running = True
+    v_arrow.visible = False
+
+button (text = "LAUNCH", bind = launch)
 
 path_pts = []
 for xcoord in arange(-80, 80.5, 0.5):
@@ -65,6 +76,8 @@ def set_loop():
 
 def set_ramp():
     reset("ramp")
+
+
 
 button(text = "curve", bind=set_curves)
 button(text = "loop", bind=set_loop)
@@ -88,37 +101,38 @@ def slope (x):
 
 while True: 
     rate (fps) # run 100 frames per sec
-    F_net = vector(0,-g*mass,0)
-    #marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
+    if running:     
+        F_net = vector(0,-g*mass,0)
+        #marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
 
-    if marble.pos.y <= (path (marble.pos.x)+0.5): 
+        if marble.pos.y <= (path (marble.pos.x)+0.5): 
 
-        #path normal vector
-        m= slope(marble.pos.x)
-        n_mag= sqrt(1+m**2)
-        normal= vector(-m/ n_mag, 1/ n_mag, 0)
-        v_n = dot(marble.v, normal)
-        if v_n < 0:
-            marble.pos.y = path(marble.pos.x)+0.5
+            #path normal vector
+            m= slope(marble.pos.x)
+            n_mag= sqrt(1+m**2)
+            normal= vector(-m/ n_mag, 1/ n_mag, 0)
+            v_n = dot(marble.v, normal)
+            if v_n < 0:
+                marble.pos.y = path(marble.pos.x)+0.5
+                
+                marble.v -= normal*v_n
             
-            marble.v -= normal*v_n
-        
-        F_n = normal * (-dot(F_net, normal))
-        F_net += F_n
-        
-        
-    a = F_net/mass
-    marble.v += a*dt
-    marble.pos += marble.v *dt
-        
-        
+            F_n = normal * (-dot(F_net, normal))
+            F_net += F_n
+            
+            
+        a = F_net/mass
+        marble.v += a*dt
+        marble.pos += marble.v *dt
+            
+            
 
-    t += dt
-    #omega = v_i.x / radius
-    #marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
-    #in this case angle = radians turned per 1/100 second
+        t += dt
+        #omega = v_i.x / radius
+        #marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
+        #in this case angle = radians turned per 1/100 second
     
-    #with angular vel = 0.05 * 100 = 5 rad/s
+        #with angular vel = 0.05 * 100 = 5 rad/s
 
 
 
