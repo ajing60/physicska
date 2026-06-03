@@ -11,29 +11,14 @@ dt = 1/fps
 g = 9.81
 Fg = vector (0, -g, 0)
 
-path_type = ""
-
 #making buttons for path type
-def set_curves():
-    globals().update(path_type="curves")
 
-def set_loop():
-    globals().update(path_type="loop")
-
-def set_ramp():
-    globals().update(path_type="ramp")
-
-button(bind=set_curves, text = "make path curve")
-button(bind=set_loop, text = "make path loop")
-button(bind=set_ramp, text = "make path ramp")
-
-
-
+path_type = "ramp"#"ramp""curves" #
 mass= 10
 path_curve = None
 def path (x):
     if path_type == "ramp": 
-        if x < 0: return 10
+        if -80<x < 0: return 10
         if 0 <= x <= 30: return 10 - (0.5 * x)
         return -50
 
@@ -43,6 +28,8 @@ def path (x):
         else: return -50
     
     elif path_type == "loop":
+        return 10
+        '''
         if (0.9 <= marble.pos.y <= 1.7): 
             if (4 <= x <= 4.4 or 5.6 <= x <= 6): 
                 return ((1 - (x-5)**2)**0.5)+1.7
@@ -55,19 +42,45 @@ def path (x):
                 return 0.5 * exp(-x + 5)
             else:
                 return -50
-
+                '''
     return -5
 
 #def setup ():
-sphere_location = vector (0.5, path(0.5), 0)
-marble = sphere (pos = sphere_location, radius = 1, texture = textures.wood)
-marble.v = vector (10,0,0)
+    
+marble_location = vector (-79.5, path(-79.5), 0)
+marble = sphere (pos = marble_location, radius = 1, texture = textures.wood)
+marble.v = vector (15,0,0)
 
 path_pts = []
-for xcoord in arange(0, 100.5, 0.5):
+for xcoord in arange(-80, 80.5, 0.5):
     path_pts.append(vector(xcoord, path(xcoord), 0))
 path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
 
+
+def set_curves():
+    reset("curves")
+
+def set_loop():
+    reset("loop")
+
+def set_ramp():
+    reset("ramp")
+
+button(text = "curve", bind=set_curves)
+button(text = "loop", bind=set_loop)
+button(text = "ramp", bind=set_ramp)
+
+def reset(path_new):
+    #path_curve.clear()
+    global path_type 
+    path_type = path_new
+    path_curve.clear()
+    for xcoord in arange(-80, 80.5, 0.5):
+        path_curve.append(vector(xcoord, path(xcoord), 0))
+    #path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
+    t=0
+    marble.pos = marble_location
+    marble.v = vector (15,0,0)
 
 def slope (x): 
     dx = 0.01
@@ -106,5 +119,6 @@ while True:
     #in this case angle = radians turned per 1/100 second
     
     #with angular vel = 0.05 * 100 = 5 rad/s
+
 
 
