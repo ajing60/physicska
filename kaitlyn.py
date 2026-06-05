@@ -14,7 +14,7 @@ path_curve = None
 marble_r=pow(mass, 1/3)
 #k = smth err this is supposed to be friction i think
 
-k = 0.05
+k = 0.1
 
 def sign(x):
     if x > 0: return 1
@@ -147,6 +147,10 @@ def reset(path_new):
     spawn_n = vector(-m / n_mag, 1 / n_mag, 0)
     marble.v = vector (20,0,0)
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
+
+    v_arrow.pos = marble.pos
+    v_arrow.axis = marble.v_arrow
+    v_arrow.visible = True
 
 omega = 0
 while True: 
