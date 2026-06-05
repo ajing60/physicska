@@ -168,7 +168,7 @@ while True:
                 marble.v -= normal*v_n
             
             F_n = normal * (-dot(F_net, normal))
-            if(v_t < 0):
+            if(v_t > 0):
                 F_f = -tangent*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
             else:
                 F_f = tangent*k*(-dot(F_net, normal))
