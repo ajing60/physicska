@@ -11,7 +11,7 @@ Fg = vector (0, -g, 0)
 path_type = "loop"#"ramp""curves" #
 mass= 10
 path_curve = None
-marble_r=pow(mass, 1/3)
+marble_r=mass**( 1/3)
 #k = smth err this is supposed to be friction i think
 
 k = 0.1
@@ -25,11 +25,17 @@ def sign(x):
 def masschange(mass_new):
     global mass, marble_r
     mass = mass_new.value
-    marble_r = pow (mass, 1/3)
+    marble_r = mass **(1/3)
     marble.radius = marble_r
 
-    
+def kchange (k_new): 
+    global k
+    k = k_new.value
+
+
 massslider = slider( bind=masschange, min=1, max=50 )
+
+fslider = slider( bind=kchange, min=0, max=1 )
 
 
 def path (x):
@@ -109,6 +115,9 @@ def clicked(myevt):
     if running:
         return
     
+    if myevt.pos == None: 
+        return
+
     click_pos = myevt.pos
     speed = click_pos-marble.pos
     v_arrow.pos = marble.pos
