@@ -24,9 +24,11 @@ def sign(x):
 
 def masschange(mass_new):
     global mass, marble_r
-    marble_r = mass_new.value
+    mass = mass_new.value
     marble_r = pow (mass, 1/3)
     marble.radius = marble_r
+
+    
 massslider = slider( bind=masschange, min=1, max=50 )
 
 
@@ -96,6 +98,7 @@ v_temp = vector(20,0,0)
 
 def launch(): 
     global running
+    running = True
     v_arrow.visible = False
 
 button (text = "LAUNCH", bind = launch)
@@ -149,7 +152,7 @@ def reset(path_new):
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
 
     v_arrow.pos = marble.pos
-    v_arrow.axis = marble.v_arrow
+    v_arrow.axis = marble.v
     v_arrow.visible = True
 
 omega = 0
