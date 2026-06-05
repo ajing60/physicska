@@ -11,14 +11,22 @@ Fg = vector (0, -g, 0)
 path_type = "loop"#"ramp""curves" #
 mass= 10
 path_curve = None
-#marble_r=4
 marble_r=pow(mass, 1/3)
 #k = smth err this is supposed to be friction i think
 
+k = 0.05
+
+def sign(x):
+    if x > 0: return 1
+    if x < 0: return -1
+    return 0
 
 
 def masschange(mass_new):
+    global mass, marble_r
     marble_r = mass_new.value
+    marble_r = pow (mass, 1/3)
+    marble.radius = marble_r
 massslider = slider( bind=masschange, min=1, max=50 )
 
 
@@ -88,15 +96,14 @@ v_temp = vector(20,0,0)
 
 def launch(): 
     global running
-    running = True
     v_arrow.visible = False
 
 button (text = "LAUNCH", bind = launch)
 
 
 def clicked(myevt):
-    global launched
-    if launched:
+    global running #change to running im not sure what launched was - audrey
+    if running:
         return
     
     click_pos = myevt.pos
@@ -126,8 +133,10 @@ button(text = "loop", bind=set_loop)
 button(text = "ramp", bind=set_ramp)
 
 def reset(path_new):
-    global path_type 
+    global path_type, t, running, marble_r
+    running = False
     path_type = path_new
+    
     path_curve.clear()
     for xcoord in arange(x_min, x_max+step, step):
         path_curve.append(vector(xcoord, path(xcoord), 0))
