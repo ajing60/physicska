@@ -21,6 +21,10 @@ def friction(myevt):
     
 myslider = slider( bind=friction, min=0, max=0.5, length =200 )
 
+def sign(x):
+    if x > 0: return 1
+    if x < 0: return -1
+    return 0
 
 def path (x):
     if path_type == "ramp": 
@@ -95,8 +99,8 @@ button (text = "LAUNCH", bind = launch)
 
 
 def clicked(myevt):
-    global launched
-    if launched:
+    global running
+    if running:
         return
     
     click_pos = myevt.pos
@@ -126,7 +130,8 @@ button(text = "loop", bind=set_loop)
 button(text = "ramp", bind=set_ramp)
 
 def reset(path_new):
-    global path_type 
+    global path_type, t, running, marble_r
+    running = False
     path_type = path_new
     path_curve.clear()
     for xcoord in arange(x_min, x_max+step, step):
