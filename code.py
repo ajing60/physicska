@@ -168,7 +168,10 @@ while True:
                 marble.v -= normal*v_n
             
             F_n = normal * (-dot(F_net, normal))
-            F_f = -tangent*sign(v_t)*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
+            if(v_t < 0):
+                F_f = -tangent*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
+            else:
+                F_f = tangent*k*(-dot(F_net, normal))
             F_net = F_net + F_n + F_f            
         else:
             omega = marble.v.x / marble_r
