@@ -2,18 +2,17 @@ Web VPython 3.2
 #define size of viewing box
 x_min = -80
 x_max = 80
-fps = 100
+fps = 200
 t = 0
 dt = 1/fps
 g = 9.81
-Fg = vector (0, -g, 0)
 #making buttons for path type
 path_type = "curves"#"ramp""curves" #loop
 mass= 10
 path_curve = None
 #marble_r=4
 marble_r=pow(mass, 1/3)
-k = 0.1
+k = 0.0
 
 #assume marble is slolid spehre -> i=2/5 mr^2
 
@@ -130,9 +129,7 @@ def set_loop():
 def set_ramp():
     reset("ramp")
     
-button(text = "curve", bind=set_curves)
-button(text = "loop", bind=set_loop)
-button(text = "ramp", bind=set_ramp)
+
 
 
 def reset(path_new):
@@ -167,7 +164,9 @@ def self_reset():
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
 
 button (text = "RESET", bind = self_reset)
-
+button(text = "curve", bind=set_curves)
+button(text = "loop", bind=set_loop)
+button(text = "ramp", bind=set_ramp)
 
 omega = 0
 while True: 
