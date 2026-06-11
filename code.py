@@ -15,16 +15,13 @@ path_curve = None
 marble_r=pow(mass, 1/3)
 k = 0.1
 
+#assume marble is slolid spehre -> i=2/5 mr^2
+
 def friction(myevt):
     global k
     k =myevt.value
     
-myslider = slider( bind=friction, min=0, max=0.5, length =200 )
-
-def sign(x):
-    if x > 0: return 1
-    if x < 0: return -1
-    return 0
+myslider = slider( bind=friction, min=0, max=1, length =200 )
 
 def path (x):
     if path_type == "ramp": 
@@ -75,6 +72,14 @@ def path (x):
 def slope (x): 
     dx = 0.01
     return (path (x + dx) - path (x-dx))/(2*dx)
+    
+def curvature(x): #radius of curvature
+    dx=0.01
+    slope1 = slope(x-dx)
+    slope2 = slope(x+dx)
+    deriv = (slope2-slope1)/(2*dx)
+    return (deriv/(1+slope(x)**2)**1.5)
+    
 
 #def setup ():
 spawn_x = x_min + marble_r
@@ -87,7 +92,7 @@ marble.v = vector (20,0,0)
 
 running = False
 v_arrow = arrow (pos = marble.pos, axis = marble.v, color = color.yellow, shaftwidth = 0.3)
-v_temp = vector(20,0,0)
+#v_temp = vector(20,0,0)
 
 
 def launch(): 
@@ -132,6 +137,7 @@ button(text = "ramp", bind=set_ramp)
 def reset(path_new):
     global path_type, t, running, marble_r
     running = False
+    omega = 0
     path_type = path_new
     path_curve.clear()
     for xcoord in arange(x_min, x_max+step, step):
@@ -151,6 +157,7 @@ while True:
         if(marble.pos.y <= -49):
             #print("help")
             marble.v = vector(0,0,0)
+            omega = 0
         F_net = vector(0,-g*mass,0)
         #marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
         if marble.pos.y <= (path (marble.pos.x)+marble_r): 
@@ -161,22 +168,46 @@ while True:
             tangent = vector(1/n_mag, m/n_mag, 0)
             v_t= dot(marble.v, tangent)
             v_n = dot(marble.v, normal)
-            omega = v_t/marble_r
             
+            #omega = v_t/marble_r
+            v_slip = v_t-(omega*marble_r)
             if v_n < 0:
                 marble.pos.y = path(marble.pos.x)+marble_r
                 marble.v -= normal*v_n
             
-            F_n = normal * (-dot(F_net, normal))
-            if(v_t > 0):
-                F_f = -tangent*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
+            bendy = curvature(marble.pos.x)
+            if bendy == 0:
+                F_c = 0
             else:
-                F_f = tangent*k*(-dot(F_net, normal))
-            F_net = F_net + F_n + F_f            
-        else:
-            omega = marble.v.x / marble_r
+                curvature_r = 1/(abs(bendy))
+                F_c = (mass *v_t **2)/(curvature_r)
             
-        a = F_net/mass
+            F_n_mag= -dot(F_net, normal)+ F_c
+            
+            F_n = normal*F_n_mag
+            
+            if F_n_mag>0:
+                
+                if(abs(v_slip) > 0.01):
+                    if(v_slip > 0):
+                        
+                        F_f = -tangent*k*F_n_mag#-tangent*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
+                    else:
+                        F_f =tangent*k*F_n_mag
+                else:
+                    F_f = vector(0,0,0)
+            else:
+                F_f = vector(0,0,0)
+                
+            F_f_mag= dot(F_f, tangent)
+            torque= -F_f_mag * marble_r
+            I =(2/5)* mass* (marble_r**2)
+            alpha= torque / I
+            omega+= alpha * dt
+                
+            F_net = F_net + F_n + F_f            
+            
+        a = F_net/(mass *7/5) #factor in rotational intertia? 7/5
         marble.v += a*dt
         marble.pos += marble.v *dt
             
