@@ -134,6 +134,7 @@ button(text = "curve", bind=set_curves)
 button(text = "loop", bind=set_loop)
 button(text = "ramp", bind=set_ramp)
 
+
 def reset(path_new):
     global path_type, t, running, marble_r
     running = False
@@ -149,6 +150,24 @@ def reset(path_new):
     spawn_n = vector(-m / n_mag, 1 / n_mag, 0)
     marble.v = vector (20,0,0)
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
+
+def self_reset():
+    global t, running, marble_r
+    running = False
+    omega = 0
+    path_curve.clear()
+    for xcoord in arange(x_min, x_max+step, step):
+        path_curve.append(vector(xcoord, path(xcoord), 0))
+    t=0
+    spawn_x = x_min + marble_r
+    m = slope(spawn_x)
+    n_mag = sqrt(1 + m**2)
+    spawn_n = vector(-m / n_mag, 1 / n_mag, 0)
+    marble.v = vector (20,0,0)
+    marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
+
+button (text = "RESET", bind = self_reset)
+
 
 omega = 0
 while True: 
@@ -217,4 +236,3 @@ while True:
         #in this case angle = radians turned per 1/100 second
         #with angular vel = 0.05 * 100 = 5 rad/s
 
-button (text = "LAUNCH", bind = launch)
