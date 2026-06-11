@@ -216,3 +216,5 @@ while True:
         marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
         #in this case angle = radians turned per 1/100 second
         #with angular vel = 0.05 * 100 = 5 rad/s
+
+button (text = "LAUNCH", bind = launch)
