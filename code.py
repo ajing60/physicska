@@ -5,7 +5,7 @@ x_max = 80
 fps = 200
 t = 0
 dt = 1/fps
-g = 9.81
+g = 9.81 #14.81
 #making buttons for path type
 path_type = "curves"#"ramp""curves" #loop
 mass= 10
@@ -187,7 +187,7 @@ omega = 0
 while True: 
     rate (fps) # run 100 frames per sec
     if running: 
-        if(marble.pos.y <= -49):
+        if(marble.pos.y <= -(50-marble_r)):
             #print("help")
             marble.v = vector(0,0,0)
             omega = 0
