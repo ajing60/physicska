@@ -18,8 +18,9 @@ elasticity = 0.6
 #assume marble is slolid spehre -> i=2/5 mr^2
 
 def friction(myevt):
-    global k
+    global k, k_static
     k =myevt.value
+    k_static = k*1.3
     
 scene.append_to_caption("\t<b>Coefficient of Friction</b>\n")
 scene.append_to_caption ("\n\t")
@@ -206,64 +207,90 @@ F_n_mag = 0
 while True: 
     rate (fps) # run 100 frames per sec
     if running: 
-        if(marble.pos.y <= -(50-marble_r)):
-            #print("help")
+        if(marble.pos.y <= -(50-marble_r)):#hard stop
             marble.v = vector(0,0,0)
             omega = 0
-        F_net = vector(0,-g*mass,0)
-        #marble.pos.y = v_i*t + 0.5 * -9.81 * t** 2
-        if marble.pos.y <= (path (marble.pos.x)+marble_r): 
+            
+        F_net = vector(0,-g*mass,0) #gravity
+        
+        if marble.pos.y <= (path (marble.pos.x)+marble_r): #on path
             #path normal vector
             m= slope(marble.pos.x)
             n_mag= sqrt(1+m**2)
             normal= vector(-m/ n_mag, 1/ n_mag, 0)
             tangent = vector(1/n_mag, m/n_mag, 0)
-            v_t= dot(marble.v, tangent)
-            v_n = dot(marble.v, normal)
+            v_t= dot(marble.v, tangent) #along path/tangent
+            v_n = dot(marble.v, normal)#normal
             
-            #omega = v_t/marble_r
-            v_slip = v_t-(omega*marble_r)
+            ##ALLERRTTTT 
             if v_n < 0:
                 marble.pos = vector(marble.pos.x,path(marble.pos.x)+marble_r, 0)
                 marble.v -= normal*v_n * (1 + elasticity) #ratio between velocity
             
+                marble.pos += normal * (path(marble.pos.x) + marble_r - marble.pos.y) * (1 / normal.y)
+                marble.pos.y = path(marble.pos.x) + marble_r
+                marble.v -= normal * v_n
+                v_t = dot(marble.v, tangent)
+                
+                
             bendy = curvature(marble.pos.x)
-            if bendy == 0:
-                F_c = 0
-            else:
-                curvature_r = 1/(abs(bendy))
-                if (bendy<0):
-                    F_c = -(mass *(v_t) **2)/(curvature_r) #F_c = -(mass *(v_t) **2)/(curvature_r)
-                else:
-                    F_c = (mass *(v_t) **2)/(curvature_r) 
+            F_c = mass * v_t**2 * bendy #centripetal force sorta
             
-            F_n_mag= -dot(F_net, normal)+ F_c #wait what idt its supposed to be constat
-            #print(F_n_mag)
+            F_n_mag = -dot(F_net, normal) + F_c #total magnitude
             
-            F_n = normal*F_n_mag
-            
-            if F_n_mag>0:
+            if F_n_mag>0: #ifthere is normal force
+                F_n = normal * F_n_mag #check
+                v_diff=v_t-(omega*marble_r) #difference? between translationan and rotational surface speed
+                #v_diff = 0 roll without slip
                 
-                if(abs(v_slip) > 0.01):
-                    if(v_slip > 0):
-                        
-                        F_f = -tangent*k*F_n_mag#-tangent*k*(-dot(F_net, normal)) #friction AUDREY AUDREY HELP!
-                    else:
+                if(abs(v_diff) > 0.01):#can change num? if there is a significant difference 
+                    if(v_diff > 0): #slipping kinetic fric
+                        F_f = -tangent*k*F_n_mag
+                    else: #rolling
                         F_f =tangent*k*F_n_mag
-                else:
-                    F_f = vector(0,0,0)
-            else:
-                F_f = vector(0,0,0)
+                        
+                    F_f_mag= dot(F_f, tangent)
+                    torque= -F_f_mag * marble_r
+                    I =(2/5)* mass* (marble_r**2)
+                    alpha= torque / I
+                    omega+= alpha * dt
+                    F_net = F_net + F_n + F_f
+                    a = F_net / mass
+                    
+                else: #vdiff = 0 roll no slip/ static
+                    a_t = dot(F_net,tangent)/mass
+                    static_max = (-2/7)*mass*a_t #force to overcome static
+                    
+                    if (abs(static_max) <=k_static*F_n_mag): #less than
+                        F_f = tangent*static_max #they see me rollinnn
+                        omega=v_t/marble_r
+                        F_net = F_net + F_n + F_f
+                        a = F_net / (mass * (7.0 / 5.0)) #factor in rotational inertia 7/5
+                        
+                    else: #becomes kinetic
+                        if v_diff>0:
+                            F_f = -tangent* k *F_n_mag
+                        else:
+                            F_f = tangent*k * F_n_mag
+                        F_f_mag= dot(F_f, tangent)
+                        torque= -F_f_mag * marble_r
+                        I =(2/5)* mass* (marble_r**2)
+                        alpha= torque /I
+                        omega+= alpha * dt
+                        F_net = F_net + F_n + F_f
+                        a = F_net / mass
+                        
+            else: #left the surface
+                F_n_mag = 0
+                F_n = vector(0, 0, 0)
+                F_f = vector(0, 0, 0)
+                a = F_net / mass
                 
-            F_f_mag= dot(F_f, tangent)
-            torque= -F_f_mag * marble_r
-            I =(2/5)* mass* (marble_r**2)
-            alpha= torque / I
-            omega+= alpha * dt
-                
-            F_net = F_net + F_n + F_f            
-            
-        a = F_net/(mass) #factor in rotational intertia? 7/5
+        else: #not on surface
+            F_n_mag = 0
+            a = F_net / mass
+        
+        
         marble.v += a*dt
         marble.pos += marble.v *dt
             
@@ -287,4 +314,3 @@ while True:
         kinetic_curve.plot(pos=(t, KE))
         velocity_curve.plot(pos=(t, v_mag))
         normal_curve.plot(pos=(t, F_n_mag))
-
