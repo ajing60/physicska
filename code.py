@@ -21,7 +21,12 @@ def friction(myevt):
     global k
     k =myevt.value
     
-myslider = slider( bind=friction, min=0, max=1, length =200 )
+scene.append_to_caption("\t<b>Coefficient of Friction</b>\n")
+scene.append_to_caption ("\n\t")
+wtext(text="0")
+myslider = slider( bind=friction, min=0, max=1, length =200)
+wtext (text="1")
+scene.append_to_caption("\n\n")
 
 def path (x):
     if path_type == "ramp": 
@@ -100,7 +105,7 @@ def launch():
     running = True
     v_arrow.visible = False
 
-button (text = "LAUNCH", bind = launch)
+button (text = "LAUNCH", bind = launch, color = color.green)
 
 
 def clicked(myevt):
@@ -130,14 +135,14 @@ def set_loop():
 def set_ramp():
     reset("ramp")
     
-energy_graph = graph (title = "Energy Graph", xtitle = "time (sec)", ytitle = "energy (J)", width = 450, height = 250)
+energy_graph = graph (title = "Energy Graph", xtitle = "time (sec)", ytitle = "energy (J)", width = 450, height = 250, align = "left")
 potential_curve = gcurve (graph = energy_graph, color = color.blue, label = "potential energy")
 kinetic_curve = gcurve (graph = energy_graph, color = color.red, label = "kinetic energy")
 
-velocity_graph = graph(title="Velocity Graph", xtitle="time (sec)", ytitle="velocity (m/s)", width=450, height=250)
+velocity_graph = graph(title="Velocity Graph", xtitle="time (sec)", ytitle="velocity (m/s)", width=450, height=250, align = "left")
 velocity_curve = gcurve(graph=velocity_graph, color=color.green, label="magnitude")
 
-force_graph = graph(title="Force Graph", xtitle="time (sec)", ytitle="normal force (N)", width=450, height=250)
+force_graph = graph(title="Force Graph", xtitle="time (sec)", ytitle="normal force (N)", width=450, height=250, align = "left")
 normal_curve = gcurve(graph=force_graph, color=color.orange, label="normal force")
 
 def reset(path_new):
@@ -180,7 +185,7 @@ def self_reset():
     velocity_curve.data = []
     normal_curve.data = []
 
-button (text = "RESET", bind = self_reset)
+button (text = "RESET", bind = self_reset,color = color.red)
 button(text = "curve", bind=set_curves)
 button(text = "loop", bind=set_loop)
 button(text = "ramp", bind=set_ramp)
