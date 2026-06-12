@@ -5,7 +5,7 @@ x_max = 80
 fps = 30
 t = 0
 dt = 1/fps
-g = 14.81 #14.81
+g = 9.81 #14.81
 #making buttons for path type
 path_type = "curves"#"ramp""curves" #loop
 mass= 10
@@ -13,6 +13,7 @@ path_curve = None
 #marble_r=4
 marble_r=pow(mass, 1/3)
 k = 0.0
+k_static = k*1.3
 
 #assume marble is slolid spehre -> i=2/5 mr^2
 
@@ -140,7 +141,7 @@ force_graph = graph(title="Force Graph", xtitle="time (sec)", ytitle="normal for
 normal_curve = gcurve(graph=force_graph, color=color.orange, label="normal force")
 
 def reset(path_new):
-    global path_type, t, running, marble_r
+    global path_type, t, running, marble_r, omega
     running = False
     omega = 0
     path_type = path_new
@@ -160,7 +161,7 @@ def reset(path_new):
     normal_curve.data = []
 
 def self_reset():
-    global t, running, marble_r
+    global t, running, marble_r, omega
     omega = 0
     running = False
     omega = 0
@@ -216,9 +217,9 @@ while True:
             else:
                 curvature_r = 1/(abs(bendy))
                 if (bendy<0):
-                    F_c = -(mass *v_t **2)/(curvature_r)
+                    F_c = -(mass *(v_t) **2)/(curvature_r) #F_c = -(mass *(v_t) **2)/(curvature_r)
                 else:
-                    F_c = (mass *v_t **2)/(curvature_r) 
+                    F_c = (mass *(v_t) **2)/(curvature_r) 
             
             F_n_mag= -dot(F_net, normal)+ F_c #wait what idt its supposed to be constat
             #print(F_n_mag)
