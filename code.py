@@ -184,7 +184,9 @@ button(text = "loop", bind=set_loop)
 button(text = "ramp", bind=set_ramp)
 
 omega = 0
+F_n_mag = 0
 while True: 
+    
     rate (fps) # run 100 frames per sec
     if running: 
         if(marble.pos.y <= -(50-marble_r)):
@@ -215,7 +217,7 @@ while True:
                 curvature_r = 1/(abs(bendy))
                 F_c = (mass *v_t **2)/(curvature_r)
             
-            F_n_mag= -dot(F_net, normal)+ F_c #wait what idt its supposed to be constat
+            F_n_mag= -dot(F_net, normal)+ F_c #nvm look good
             
             F_n = normal*F_n_mag
             
@@ -259,8 +261,8 @@ while True:
         PE = mass * g * (marble.pos.y + 50) 
         
         
-        potential_curve.plot(pos=(t, PE))
-        kinetic_curve.plot(pos=(t, KE))
-        velocity_curve.plot(pos=(t, v_mag))
-        #normal_curve.plot(pos=(t, F_n_mag))
+        potential_curve.plot(t, PE)
+        kinetic_curve.plot(t, KE)
+        velocity_curve.plot(t, v_mag)
+        normal_curve.plot(t, F_n_mag)
 
