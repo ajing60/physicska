@@ -129,8 +129,15 @@ def set_loop():
 def set_ramp():
     reset("ramp")
     
+energy_graph = graph (title = "Energy Graph", xtitle = "time (sec)", ytitle = "energy (J)", width = 450, height = 250)
+potential_curve = gcurve (graph = energy_graph, color = color.blue, label = "potential energy")
+kinetic_curve = gcurve (graph = energy_graph, color = color.red, label = "kinetic energy")
 
+velocity_graph = graph(title="Velocity Graph", xtitle="time (sec)", ytitle="velocity (m/s)", width=450, height=250)
+elocity_curve = gcurve(graph=velocity_graph, color=color.green, label="magnitude")
 
+force_graph = graph(title="Force Graph", xtitle="time (sec)", ytitle="normal force (N)", width=450, height=250)
+normal_curve = gcurve(graph=force_graph, color=color.orange, label="normal force")
 
 def reset(path_new):
     global path_type, t, running, marble_r
@@ -147,6 +154,10 @@ def reset(path_new):
     spawn_n = vector(-m / n_mag, 1 / n_mag, 0)
     marble.v = vector (20,0,0)
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
+    potential_curve.data = []
+    kinetic_curve.data = []
+    velocity_curve.data = []
+    normal_curve.data = []
 
 def self_reset():
     global t, running, marble_r
@@ -162,6 +173,10 @@ def self_reset():
     spawn_n = vector(-m / n_mag, 1 / n_mag, 0)
     marble.v = vector (20,0,0)
     marble.pos = vector (spawn_x, path(spawn_x), 0) + (spawn_n * marble_r)
+    potential_curve.data = []
+    kinetic_curve.data = []
+    velocity_curve.data = []
+    normal_curve.data = []
 
 button (text = "RESET", bind = self_reset)
 button(text = "curve", bind=set_curves)
@@ -234,4 +249,18 @@ while True:
         marble.rotate (angle = -omega * dt, axis = vector (0, 0, 1)) #angle = radiuns turned per frame
         #in this case angle = radians turned per 1/100 second
         #with angular vel = 0.05 * 100 = 5 rad/s
+        
+        v_mag = mag (marble.v)
+        #translational plus rotational formulas
+        I = (2/5) * mass * (marble_r**2)
+        KE = (0.5 * mass * v_mag**2) + (0.5 * I * omega**2)
+        
+        #using y = -50 as baseline zero potential energy ig??
+        PE = mass * g * (marble.pos.y + 50) 
+        
+        
+        potential_curve.plot(pos=(t, PE))
+        kinetic_curve.plot(pos=(t, KE))
+        velocity_curve.plot(pos=(t, v_mag))
+        normal_curve.plot(pos=(t, current_Fn))
 
