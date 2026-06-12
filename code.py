@@ -134,7 +134,7 @@ potential_curve = gcurve (graph = energy_graph, color = color.blue, label = "pot
 kinetic_curve = gcurve (graph = energy_graph, color = color.red, label = "kinetic energy")
 
 velocity_graph = graph(title="Velocity Graph", xtitle="time (sec)", ytitle="velocity (m/s)", width=450, height=250)
-elocity_curve = gcurve(graph=velocity_graph, color=color.green, label="magnitude")
+velocity_curve = gcurve(graph=velocity_graph, color=color.green, label="magnitude")
 
 force_graph = graph(title="Force Graph", xtitle="time (sec)", ytitle="normal force (N)", width=450, height=250)
 normal_curve = gcurve(graph=force_graph, color=color.orange, label="normal force")
@@ -215,7 +215,7 @@ while True:
                 curvature_r = 1/(abs(bendy))
                 F_c = (mass *v_t **2)/(curvature_r)
             
-            F_n_mag= -dot(F_net, normal)+ F_c
+            F_n_mag= -dot(F_net, normal)+ F_c #wait what idt its supposed to be constat
             
             F_n = normal*F_n_mag
             
@@ -262,5 +262,5 @@ while True:
         potential_curve.plot(pos=(t, PE))
         kinetic_curve.plot(pos=(t, KE))
         velocity_curve.plot(pos=(t, v_mag))
-        normal_curve.plot(pos=(t, current_Fn))
+        normal_curve.plot(pos=(t, F_n))
 
