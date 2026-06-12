@@ -2,10 +2,10 @@ Web VPython 3.2
 #define size of viewing box
 x_min = -80
 x_max = 80
-fps = 200
+fps = 30
 t = 0
 dt = 1/fps
-g = 9.81 #14.81
+g = 14.81 #14.81
 #making buttons for path type
 path_type = "curves"#"ramp""curves" #loop
 mass= 10
@@ -161,6 +161,7 @@ def reset(path_new):
 
 def self_reset():
     global t, running, marble_r
+    omega = 0
     running = False
     omega = 0
     path_curve.clear()
@@ -186,7 +187,6 @@ button(text = "ramp", bind=set_ramp)
 omega = 0
 F_n_mag = 0
 while True: 
-    
     rate (fps) # run 100 frames per sec
     if running: 
         if(marble.pos.y <= -(50-marble_r)):
@@ -215,9 +215,13 @@ while True:
                 F_c = 0
             else:
                 curvature_r = 1/(abs(bendy))
-                F_c = (mass *v_t **2)/(curvature_r)
+                if (bendy<0):
+                    F_c = -(mass *v_t **2)/(curvature_r)
+                else:
+                    F_c = (mass *v_t **2)/(curvature_r) 
             
-            F_n_mag= -dot(F_net, normal)+ F_c #nvm look good
+            F_n_mag= -dot(F_net, normal)+ F_c #wait what idt its supposed to be constat
+            #print(F_n_mag)
             
             F_n = normal*F_n_mag
             
@@ -242,7 +246,7 @@ while True:
                 
             F_net = F_net + F_n + F_f            
             
-        a = F_net/(mass *7/5) #factor in rotational intertia? 7/5
+        a = F_net/(mass) #factor in rotational intertia? 7/5
         marble.v += a*dt
         marble.pos += marble.v *dt
             
@@ -261,8 +265,9 @@ while True:
         PE = mass * g * (marble.pos.y + 50) 
         
         
-        potential_curve.plot(t, PE)
-        kinetic_curve.plot(t, KE)
-        velocity_curve.plot(t, v_mag)
-        normal_curve.plot(t, F_n_mag)
+        potential_curve.plot(pos=(t, PE))
+        #print(PE)
+        kinetic_curve.plot(pos=(t, KE))
+        velocity_curve.plot(pos=(t, v_mag))
+        normal_curve.plot(pos=(t, F_n_mag))
 
