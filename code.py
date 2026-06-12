@@ -10,10 +10,10 @@ g = 9.81 #14.81
 path_type = "curves"#"ramp""curves" #loop
 mass= 10
 path_curve = None
-#marble_r=4
 marble_r=pow(mass, 1/3)
 k = 0.0
 k_static = k*1.3
+elasticity = 0.6
 
 #assume marble is slolid spehre -> i=2/5 mr^2
 
@@ -25,6 +25,17 @@ scene.append_to_caption("\t<b>Coefficient of Friction</b>\n")
 scene.append_to_caption ("\n\t")
 wtext(text="0")
 myslider = slider( bind=friction, min=0, max=1, length =200)
+wtext (text="1")
+scene.append_to_caption("\n\n")
+
+def change_elasticity(myevt):
+    global elasticity
+    elasticity = myevt.value
+
+scene.append_to_caption("\t<b>Elasticity</b>\n")
+scene.append_to_caption ("\n\t")
+wtext(text="0")
+bounce_slider = slider( bind=change_elasticity, min=0, max=1, length =200)
 wtext (text="1")
 scene.append_to_caption("\n\n")
 
@@ -213,8 +224,8 @@ while True:
             #omega = v_t/marble_r
             v_slip = v_t-(omega*marble_r)
             if v_n < 0:
-                marble.pos.y = path(marble.pos.x)+marble_r
-                marble.v -= normal*v_n
+                marble.pos = vector(marble.pos.x,path(marble.pos.x)+marble_r, 0)
+                marble.v -= normal*v_n * (1 + elasticity) #ratio between velocity
             
             bendy = curvature(marble.pos.x)
             if bendy == 0:
