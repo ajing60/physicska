@@ -262,5 +262,5 @@ while True:
         potential_curve.plot(pos=(t, PE))
         kinetic_curve.plot(pos=(t, KE))
         velocity_curve.plot(pos=(t, v_mag))
-        normal_curve.plot(pos=(t, F_n))
+        #normal_curve.plot(pos=(t, F_n_mag))
 
