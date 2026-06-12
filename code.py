@@ -224,12 +224,11 @@ while True:
             
             ##ALLERRTTTT 
             if v_n < 0:
-                marble.pos = vector(marble.pos.x,path(marble.pos.x)+marble_r, 0)
-                marble.v -= normal*v_n * (1 + elasticity) #ratio between velocity
+                #marble.pos = vector(marble.pos.x,path(marble.pos.x)+marble_r, 0) - audrey version
             
                 marble.pos += normal * (path(marble.pos.x) + marble_r - marble.pos.y) * (1 / normal.y)
                 marble.pos.y = path(marble.pos.x) + marble_r
-                marble.v -= normal * v_n
+                marble.v -= normal*v_n * (1 + elasticity) #ratio between velocity
                 v_t = dot(marble.v, tangent)
                 
                 
