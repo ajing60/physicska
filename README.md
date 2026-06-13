@@ -25,13 +25,13 @@ Graphs: Three graphs all plotted against time.
 	Normal Force: This graph shows the normal force of the marble throughout the marble run. 
 
 USER INSTRUCTIONS:
-Run the program!
-Adjust the parameters to your heart’s desire. You can change the coefficient of friction and elasticity of the path using the two sliders at the top. 
-Click the type of path that you want to explore. There are four options, make sure to take a look at each!
-Press anywhere on the black screen to set the initial velocity of the marble. Note that the arrow will carry information about magnitude and direction, so be careful of how far away from the marble itself you click. 
-Click LAUNCH to see your marble move! It will go through the path selected and even fall off into space, at least until it hits the red bar below the path.
-Make sure to scroll down to see the energy, velocity, and force graphs.
-Click RESET to try different paths and parameters. Enjoy!
+1. Run the program!
+2. Adjust the parameters to your heart’s desire. You can change the coefficient of friction and elasticity of the path using the two sliders at the top. 
+3. Click the type of path that you want to explore. There are four options, make sure to take a look at each!
+4. Press anywhere on the black screen to set the initial velocity of the marble. Note that the arrow will carry information about magnitude and direction, so be careful of how far away from the marble itself you click. 
+5. Click LAUNCH to see your marble move! It will go through the path selected and even fall off into space, at least until it hits the red bar below the path.
+6. Make sure to scroll down to see the energy, velocity, and force graphs. Force is especially interesting because it reveals whenever the marble lifts off the track because the normal force goes to zero.
+7. Click RESET to try different paths and parameters. Enjoy!
 
 PHYSICS:
 Some calculations we consider are the varying normal forces at different points on the path, mechanical energy and energy lost to friction, if the marble rolls, slides, or slips, and if the marble lifts off the path.
