@@ -132,7 +132,7 @@ for xcoord in arange(x_min, x_max+step, step):
     path_pts.append(vector(xcoord, path(xcoord), 0))
 path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
 
-floor_line = curve (pos = [vector (2 * x_min, -50, 0), vector ( 2 * x_max, -50, 0)], color = color.red, radius = 0.3)
+floor_line = curve (pos = [vector (5 * x_min, -50, 0), vector ( 5 * x_max, -50, 0)], color = color.red, radius = 0.3)
 def set_Sine():
     reset("Sine")
 def set_free():
