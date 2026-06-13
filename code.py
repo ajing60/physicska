@@ -1,7 +1,7 @@
 Web VPython 3.2
 x_min = -80
 x_max = 80
-fps = 30
+fps = 100
 t = 0
 dt = 1/fps
 g = 9.81
@@ -132,6 +132,7 @@ for xcoord in arange(x_min, x_max+step, step):
     path_pts.append(vector(xcoord, path(xcoord), 0))
 path_curve = curve(pos=path_pts, color=color.cyan, radius=0.2)
 
+floor_line = curve (pos = [vector (2 * x_min, -50, 0), vector ( 2 * x_max, -50, 0)], color = color.red, radius = 0.3)
 def set_Sine():
     reset("Sine")
 def set_free():
@@ -212,6 +213,11 @@ button(text = "Ramp Fancy", bind=set_up)
 
 omega = 0
 F_n_mag = 0
+
+scene.autoscale = False
+scene.center = vector (0, -10, 0)
+scene.range = 60
+
 while True: 
     rate (fps) # run 100 frames per sec
     if running: 
@@ -221,7 +227,7 @@ while True:
             
         F_net = vector(0,-g*mass,0) #gravity
         
-        if marble.pos.y <= (path (marble.pos.x)+marble_r): #on path
+        if marble.pos.y <= (path (marble.pos.x)+marble_r + 0.1): #on path w some tolerance for force graph purpose
             #path normal vector
             m= slope(marble.pos.x)
             n_mag= sqrt(1+m**2)
